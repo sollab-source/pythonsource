@@ -60,8 +60,8 @@
 
 - **Chapter 08: 데이터베이스를 활용한 프로그래밍**
 
-  - 8-1 데이터와 SQL
-  - 8-2 원격 DB 서버와 연결
+  - 8-1 데이터와	SQL	(SQLite	활용)
+  - 8-2 SQLite와	Python	연동
 
 - **Chapter 09: 파이썬 활용**
 
