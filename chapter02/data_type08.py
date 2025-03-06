@@ -7,3 +7,9 @@ print(text)
 text = '''Hello 
 World'''
 print(text)
+
+#2 줄바꿈 문자(\n) 사용
+# 백슬래시(\)와 n을 조합한 \n을 사용하면 줄바꿈을 표현할 수 있다.
+
+text = "Hello\nWorld"
+print(text)
