@@ -7,7 +7,7 @@ def get_movement_path(departure, arrival):
     with sync_playwright() as p:
 
         browser = p.chromium.launch(headless=False)
-        context = browser.new_context(viewport={"width": 1920, "height": 1680})
+        context = browser.new_context(viewport={"width": 1920, "height": 1080})
         page = context.new_page()
 
         page.goto("https://www.google.co.kr/maps/")
