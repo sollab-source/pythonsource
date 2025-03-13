@@ -9,38 +9,52 @@ def get_trend_rank():
         browser = p.chromium.launch(headless=False)
         page = browser.new_page()
 
-        page.goto("https://m.kinolights.com/rank_data/kino")
+        page.goto("https://m.kinolights.com/ranking")
 
-        rank_data_items = page.query_selector_all(".rank_data-item")
+        ranking_items = page.query_selector_all(".ranking-item")
 
         rank_data = []
-        for rank_data_item in rank_data_items:
+        for ranking_item in ranking_items:
 
-            content = rank_data_item.inner_text().split("\n")
+            content = ranking_item.inner_text().split("\n")
 
-            rank = content[0]
-            etc = content[3] if content[5] == "" else "해당 정보 없음"
-            title = content[4] if content[5] == "" else content[3]
-            genre_birth = (content[6] if content[5] == "" else content[5]).split("·")
-            genre = genre_birth[0].strip()
-            birth = (
-                genre_birth[1].strip() if len(genre_birth) == 2 else "해당 정보 없음"
-            )
-            if len(content) != 7:
-                score = content[8] if content[7] == "" else content[7]
-            else:
-                score = "해당 정보 없음"
+            result = {
+                "rank": None,
+                "media": None,
+                "title": None,
+                "genre_year": None,
+                "rating": None,
+            }
 
-            rank_data.append(
-                {
-                    "순위": rank,
-                    "매체": etc,
-                    "제목": title,
-                    "장르": genre,
-                    "출시년도": birth,
-                    "점수": score,
-                }
-            )
+            result["rank"] = content[0]
+
+            idx = 2
+
+            if idx < len(content) and content[idx] == "NEW" or content[idx].isdigit():
+                idx += 1
+
+            media_types = {
+                "TV",
+                "영화관",
+            }  # 필요에 따라 확장
+            if idx < len(content) and content[idx] in media_types:
+                result["media"] = content[idx]
+                idx += 1
+
+            if idx < len(content):
+                result["title"] = content[idx]
+                idx += 2
+
+            if idx < len(content):
+                result["genre_year"] = content[idx]
+                idx += 2
+
+            # 8. 평점: 보통 '%'로 끝나면 평점으로 판단
+            if idx < len(content) and content[idx].endswith("%"):
+                result["rating"] = content[idx]
+                idx += 1
+
+            rank_data.append(result)
 
         save_csv(rank_data)
 
@@ -53,8 +67,7 @@ def save_csv(rank_data):
                 "순위",
                 "매체",
                 "제목",
-                "장르",
-                "출시년도",
+                "장르 및 출시년도",
                 "점수",
             ]
         )
